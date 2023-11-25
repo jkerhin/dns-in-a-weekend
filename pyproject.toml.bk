@@ -1,0 +1,14 @@
+[project]
+name = "dns-in-a-weekend"
+# TODO: Figure out how to pull in from __version__; I know there's a way
+version = "0.0.1"
+description = "Just implementing 'DNS in a weekend'"
+authors = [
+    { name = "Joe Kerhin", email = "37146185+jkerhin@users.noreply.github.com" }
+]
+dependencies = [
+    "pydantic>=2.0.0",
+]
+# FIXME
+#readme = "README.md"
+requires-python = ">= 3.8"

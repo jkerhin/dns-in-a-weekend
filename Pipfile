@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pydantic = "*"
+weekend-dns = {file = ".", editable = true}
+
+[dev-packages]
+pre-commit = "*"
+pytest = "*"
+flit = "*"
+
+[requires]
+python_version = "3.10"
