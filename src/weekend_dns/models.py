@@ -1,4 +1,5 @@
 import struct
+from io import BytesIO
 from typing import BinaryIO
 
 from pydantic import BaseModel
@@ -59,3 +60,28 @@ class DNSRecord(BaseModel):
         type_, class_, ttl, data_len = struct.unpack("!HHIH", hdl.read(10))
         data = hdl.read(data_len)
         return cls(name=name, type_=type_, class_=class_, ttl=ttl, data=data)
+
+
+class DNSPacket(BaseModel):
+    header: DNSHeader
+    questions: list[DNSQuestion]
+    answers: list[DNSRecord]
+    authorities: list[DNSRecord]
+    additionals: list[DNSRecord]
+
+    @classmethod
+    def parse_bytes(cls, packet_bytes: bytes) -> "DNSPacket":
+        hdl = BytesIO(packet_bytes)
+        header = DNSHeader.read(hdl=hdl)
+        questions = [DNSQuestion.read(hdl=hdl) for _ in range(header.num_questions)]
+        answers = [DNSRecord.read(hdl=hdl) for _ in range(header.num_answers)]
+        authorities = [DNSRecord.read(hdl=hdl) for _ in range(header.num_authorities)]
+        additionals = [DNSRecord.read(hdl=hdl) for _ in range(header.num_additionals)]
+
+        return cls(
+            header=header,
+            questions=questions,
+            answers=answers,
+            authorities=authorities,
+            additionals=additionals,
+        )

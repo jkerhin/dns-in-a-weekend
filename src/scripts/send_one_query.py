@@ -1,22 +1,25 @@
-"""Quick send-only test
+"""Updating now to actually handle the returned packet
 
-Use wireshark to capture network traffic and decode the response
+Still a clunky print, but better than before
 """
 import socket
 
-import src.weekend_dns
-import src.weekend_dns.io
 import weekend_dns
 
 
 def main():
-    query = src.weekend_dns.build_query("www.example.com", weekend_dns.TYPE_A)
+    site = "www.example.com"  # Works fine
+    # site = "www.metafilter.com"  # Bombs out. Record type = 5 (not implemented yet)
+
+    query = weekend_dns.build_query(site, weekend_dns.TYPE_A)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
     sock.sendto(query, ("1.1.1.1", 53))  # Cloudflare
 
     response, _ = sock.recvfrom(1024)
 
-    print(response.hex())
+    pkt = weekend_dns.DNSPacket.parse_bytes(response)
+    print("DNS Packet:", pkt)
+    print("IP Address:", weekend_dns.io.ip_to_string(pkt.answers[0].data))
 
 
 if __name__ == "__main__":

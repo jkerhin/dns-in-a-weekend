@@ -2,7 +2,7 @@
 import random
 
 from .io import encode_dns_name
-from .models import DNSHeader, DNSQuestion, DNSRecord
+from .models import DNSHeader, DNSPacket, DNSQuestion, DNSRecord
 
 __version__ = "0.0.1"
 

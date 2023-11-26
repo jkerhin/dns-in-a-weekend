@@ -39,3 +39,8 @@ def read_compressed_name(length: int, hdl: BinaryIO) -> bytes:
     result = read_dns_name(hdl=hdl)
     hdl.seek(current_pos)
     return result
+
+
+def ip_to_string(ip: bytes) -> str:
+    octets = struct.unpack("!4B", ip)
+    return ".".join(str(o) for o in octets)

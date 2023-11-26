@@ -11,7 +11,14 @@ julia_response = b'`V\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00\x03www\x07example\
 
 
 def main():
-    hdl = BytesIO(my_response)
+    manual(response=my_response)
+
+    pkt = weekend_dns.DNSPacket.parse_bytes(my_response)
+    print(pkt)
+
+
+def manual(response: bytes):
+    hdl = BytesIO(response)
     h = weekend_dns.DNSHeader.read(hdl)
     q = weekend_dns.DNSQuestion.read(hdl)
     r = weekend_dns.DNSRecord.read(hdl)
