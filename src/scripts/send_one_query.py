@@ -4,11 +4,13 @@ Use wireshark to capture network traffic and decode the response
 """
 import socket
 
+import src.weekend_dns
+import src.weekend_dns.io
 import weekend_dns
 
 
 def main():
-    query = weekend_dns.build_query("www.example.com", weekend_dns.TYPE_A)
+    query = src.weekend_dns.build_query("www.example.com", weekend_dns.TYPE_A)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
     sock.sendto(query, ("1.1.1.1", 53))  # Cloudflare
 
