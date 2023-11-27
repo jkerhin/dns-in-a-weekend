@@ -4,7 +4,7 @@ import random
 from .io import encode_dns_name
 from .models import DNSHeader, DNSPacket, DNSQuestion, DNSRecord
 
-__version__ = "0.0.2"
+__version__ = "0.1.0"
 
 random.seed(1)  # TODO: Need a better place for this
 CLASS_IN = 1

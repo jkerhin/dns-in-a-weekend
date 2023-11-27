@@ -80,6 +80,21 @@ class DNSPacket(BaseModel):
     authorities: list[DNSRecord]
     additionals: list[DNSRecord]
 
+    def get_answer(self):
+        for x in self.answers:
+            if x.type_ == DNSType.TYPE_A.value:
+                return x.data
+
+    def get_nameserver(self):
+        for x in self.authorities:
+            if x.type_ == DNSType.TYPE_NS.value:
+                return x.data.decode("utf-8")
+
+    def get_nameserver_ip(self):
+        for x in self.additionals:
+            if x.type_ == DNSType.TYPE_A.value:
+                return x.data
+
     @classmethod
     def parse_bytes(cls, packet_bytes: bytes) -> "DNSPacket":
         hdl = BytesIO(packet_bytes)
