@@ -35,3 +35,17 @@ length = reader.read(1)[0]
 # Explicitly use "B" format - unsigned char
 length, = struct.unpack("!B", reader.read(1))
 ```
+
+## Self Assessment
+
+Well, I got it working, but with a significant amount of copy/paste and with minimal "own
+work" modifications. There are more exercises remaining, and I've got a couple TODOs
+throughout the code. Not sure when I'll have time to get back to this, but these are
+things I was thinking of as next steps:
+
+ - [ ] Actually use `Enum`s throughout the code instead of raw integers
+- [ ] Make it work with `CNAME` records
+- [ ] cache DNS records
+- [ ] Support other record types by name (e.g. A, AAAA, TXT, etc.)
+    - This ties in to the "use Enums" item
+- [ ] The other items on [the "exercises" list](https://implement-dns.wizardzines.com/book/exercises)

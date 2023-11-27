@@ -9,8 +9,12 @@ from weekend_dns import io
 
 
 class DNSType(Enum):
-    TYPE_A = 1
-    TYPE_NS = 2
+    A = 1
+    NS = 2
+    CNAME = 5
+    MX = 15
+    TXT = 16
+    AAAA = 28
 
 
 class DNSHeader(BaseModel):
@@ -64,9 +68,9 @@ class DNSRecord(BaseModel):
     def read(cls, hdl: BinaryIO) -> "DNSRecord":
         name = io.read_dns_name(hdl=hdl)
         type_, class_, ttl, data_len = struct.unpack("!HHIH", hdl.read(10))
-        if type_ == DNSType.TYPE_NS.value:
+        if type_ == DNSType.NS.value:
             data = io.read_dns_name(hdl)
-        elif type_ == DNSType.TYPE_A.value:
+        elif type_ == DNSType.A.value:
             data = io.ip_to_string(hdl.read(data_len))
         else:
             data = hdl.read(data_len)
@@ -82,17 +86,17 @@ class DNSPacket(BaseModel):
 
     def get_answer(self):
         for x in self.answers:
-            if x.type_ == DNSType.TYPE_A.value:
+            if x.type_ == DNSType.A.value:
                 return x.data
 
     def get_nameserver(self):
         for x in self.authorities:
-            if x.type_ == DNSType.TYPE_NS.value:
+            if x.type_ == DNSType.NS.value:
                 return x.data.decode("utf-8")
 
     def get_nameserver_ip(self):
         for x in self.additionals:
-            if x.type_ == DNSType.TYPE_A.value:
+            if x.type_ == DNSType.A.value:
                 return x.data
 
     @classmethod
