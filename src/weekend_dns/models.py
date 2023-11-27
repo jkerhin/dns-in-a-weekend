@@ -1,10 +1,16 @@
 import struct
+from enum import Enum
 from io import BytesIO
 from typing import BinaryIO
 
 from pydantic import BaseModel
 
 from weekend_dns import io
+
+
+class DNSType(Enum):
+    TYPE_A = 1
+    TYPE_NS = 2
 
 
 class DNSHeader(BaseModel):
@@ -58,7 +64,12 @@ class DNSRecord(BaseModel):
     def read(cls, hdl: BinaryIO) -> "DNSRecord":
         name = io.read_dns_name(hdl=hdl)
         type_, class_, ttl, data_len = struct.unpack("!HHIH", hdl.read(10))
-        data = hdl.read(data_len)
+        if type_ == DNSType.TYPE_NS.value:
+            data = io.read_dns_name(hdl)
+        elif type_ == DNSType.TYPE_A.value:
+            data = io.ip_to_string(hdl.read(data_len))
+        else:
+            data = hdl.read(data_len)
         return cls(name=name, type_=type_, class_=class_, ttl=ttl, data=data)
 
 
